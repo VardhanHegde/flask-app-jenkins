@@ -2,15 +2,23 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Setup') {
             steps {
-                echo 'Creating virtual environment and installing dependencies...'
+                echo 'Setting up environment...'
+                sh '''
+                python3 -m venv venv
+                . venv/bin/activate
+                pip install -r requirements.txt
+                '''
             }
         }
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                sh 'python3 -m unittest discover -s .'
+                sh '''
+                . venv/bin/activate
+                python3 -m unittest discover -s .
+                '''
             }
         }
         stage('Deploy') {
@@ -35,6 +43,7 @@ pipeline {
             steps {
                 echo 'Testing application...'
                 sh '''
+                . venv/bin/activate
                 python3 ${WORKSPACE}/test_app.py
                 '''
             }
@@ -49,4 +58,4 @@ pipeline {
             echo 'Pipeline failed. Check the logs for more details.'
         }
     }
-}x
+}
