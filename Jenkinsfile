@@ -6,7 +6,7 @@ pipeline {
             steps {
                 echo 'Setting up environment...'
                 sh '''
-                python3 -m venv venv
+                python -m venv venv
                 . venv/bin/activate
                 pip install -r requirements.txt
                 '''
@@ -17,7 +17,7 @@ pipeline {
                 echo 'Running tests...'
                 sh '''
                 . venv/bin/activate
-                python3 -m unittest discover -s .
+                python -m unittest discover -s .
                 '''
             }
         }
@@ -34,7 +34,7 @@ pipeline {
             steps {
                 echo 'Running application...'
                 sh '''
-                nohup python3 ${WORKSPACE}/python-app-deploy/app.py > ${WORKSPACE}/python-app-deploy/app.log 2>&1 &
+                nohup python ${WORKSPACE}/python-app-deploy/app.py > ${WORKSPACE}/python-app-deploy/app.log 2>&1 &
                 echo $! > ${WORKSPACE}/python-app-deploy/app.pid
                 '''
             }
@@ -44,7 +44,7 @@ pipeline {
                 echo 'Testing application...'
                 sh '''
                 . venv/bin/activate
-                python3 ${WORKSPACE}/test_app.py
+                python ${WORKSPACE}/test_app.py
                 '''
             }
         }
